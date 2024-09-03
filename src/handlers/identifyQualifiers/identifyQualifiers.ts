@@ -5,16 +5,13 @@ import { z } from "zod";
 
 import { classifySegmentPrompt } from "./prompts/classifySegment";
 
-import { DocxLoader } from "@langchain/community/document_loaders/fs/docx";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { getQualifierExamples } from "../../utils/prompt_utils";
-import mammoth from "mammoth";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { sortParagraphs } from "../../utils/general_utils";
 
 export const identifyQualifiers = async (
-  document: Blob,
-  docPath: string
+  document: Blob
 ): Promise<any> => {
   console.log(document);
 
@@ -24,19 +21,13 @@ export const identifyQualifiers = async (
     separators: ["\n"],
   });
 
-  // const loader = new DocxLoader(document);
-
+  // Currently only supports PDFs
   const loader = new PDFLoader(document, {
     splitPages: false,
   });
 
   const docs = await loader.load();
-
-  // co
-
   const splitDocument = await splitter.splitDocuments(docs);
-
-  // return [docs, splitDocument];
 
   const classes: any[] = [];
 
